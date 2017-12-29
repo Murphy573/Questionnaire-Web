@@ -1,21 +1,39 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {SignInService} from './sign-in.service';
+import {Router} from '@angular/router';
+import {Subscription} from 'rxjs/Subscription';
+import 'rxjs/add/operator/debounceTime';
 import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/merge';
 
 @Component({
   selector: 'qn-sign-in',
   templateUrl: './sign-in.component.html',
   styleUrls: ['./sign-in.component.css']
 })
-export class SignInComponent implements OnInit {
-
+export class SignInComponent implements OnInit, OnDestroy {
   validateForm: FormGroup;
+
+  submitSub: Subscription;
+
   submitForm = ($event, value) => {
     $event.preventDefault();
     for (const key in this.validateForm.controls) {
       this.validateForm.controls[ key ].markAsDirty();
     }
-    console.log(value);
+    this.submitSub = this.si.signIn(value).subscribe(
+      data => {
+        if(!!data){
+          this.ri.navigate(['/login']);
+        }
+      },
+      error => {
+        console.log(error);
+      }
+    )
+
   };
 
   eudcations: any[] = [
@@ -51,6 +69,8 @@ export class SignInComponent implements OnInit {
     for (const key in this.validateForm.controls) {
       this.validateForm.controls[ key ].markAsPristine();
     }
+
+
   }
 
   validateConfirmPassword() {
@@ -60,7 +80,25 @@ export class SignInComponent implements OnInit {
   }
 
   userNameAsyncValidator = (control: FormControl): any => {
-    return Observable.create(function (observer) {
+    return Observable.create((observer) => {
+      control.valueChanges.debounceTime(1000).subscribe(
+        value => {
+          this.si.validateUser(value).subscribe(
+            result => {
+              if(result){
+                observer.next({ error: true, duplicated: true });
+              }
+              else {
+                observer.next(null);
+              }
+              observer.complete();
+            }
+          )
+        }
+      );
+    });
+
+    /*return Observable.create(function (observer) {
       setTimeout(() => {
         if (control.value === 'admin') {
           observer.next({ error: true, duplicated: true });
@@ -69,7 +107,7 @@ export class SignInComponent implements OnInit {
         }
         observer.complete();
       }, 1000);
-    });
+    });*/
   };
 
   getFormControl(name) {
@@ -97,7 +135,7 @@ export class SignInComponent implements OnInit {
     }
   };
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private si: SignInService, private ri: Router) {
     this.validateForm = this.fb.group({
       userName            : [ '', [ Validators.required ], [ this.userNameAsyncValidator ] ],
       email               : [ '', [ this.emailValidator ] ],
@@ -114,4 +152,19 @@ export class SignInComponent implements OnInit {
   ngOnInit() {
   }
 
+  ngOnDestroy(): void {
+    this.submitSub.unsubscribe();
+  }
+}
+
+export class User {
+  constructor(
+    public userName: string,
+    public email: string,
+    public sex: string,
+    public edu: string,
+    public birthDay: string,
+    public password: string,
+    public comment: string
+  ) {}
 }
