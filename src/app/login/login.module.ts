@@ -12,6 +12,7 @@ import {ReactiveFormsModule} from '@angular/forms';
     NgZorroAntdModule,
     ReactiveFormsModule
   ],
-  declarations: [LoginComponent]
+  declarations: [LoginComponent],
+  exports: []
 })
 export class LoginModule { }
