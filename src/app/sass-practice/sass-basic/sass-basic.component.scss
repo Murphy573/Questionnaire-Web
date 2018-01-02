@@ -1,0 +1,38 @@
+@import "../../../assets/styles/base";
+
+$normal-color: #543534;
+
+.sass-container {
+  $normal-color: #C60DE9;//作用域
+  @extend .full-screen;//继承.full-screen的样式
+
+  &-child-1 {//生成为sass-container-child-1
+    background: $normal-color;
+    width: my-container(100px);
+    height: my-container(10px);
+    @include my-border(black, 2px, dotted);
+
+    &:hover {
+      background: {//生成为background-color
+        color: $hover-color;
+      };
+      @include my-border($normal-color, 2px);
+    }
+
+    ~ .child-selector {
+      background: $hover-color;
+      height: my-container(20px);
+    }
+  }
+
+  .special & {//special下面的sass-container
+    background: #E9E322;
+  }
+
+  >  {
+    .child-selector {
+      background: #81E94D;
+      height: my-container(10px);
+    }
+  }
+}

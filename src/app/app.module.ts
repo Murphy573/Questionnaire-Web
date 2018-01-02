@@ -3,7 +3,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import { NgZorroAntdModule } from 'ng-zorro-antd';
+import {NgZorroAntdModule, NZ_MESSAGE_CONFIG} from 'ng-zorro-antd';
 import { AppComponent } from './app.component';
 import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {AppRoutingModule} from './app-routing.module';
@@ -30,10 +30,21 @@ import {UtilService} from './shared/util/util.service';
     NgZorroAntdModule.forRoot({ extraFontName: 'anticon', extraFontUrl: './assets/fonts/iconfont' })
   ],
   bootstrap: [AppComponent],
-  providers: [CanLoadService, LoginDataService, SignInService, UtilService,{
-    provide: HTTP_INTERCEPTORS,
-    useClass: MyHttpInterceptorService,
-    multi: true
-  }]
+  providers: [CanLoadService, LoginDataService, SignInService, UtilService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: MyHttpInterceptorService,
+      multi: true
+    },
+    {
+      provide: NZ_MESSAGE_CONFIG,
+      useValue: {
+        nzDuration             : 5000,//持续时间
+        nzMaxStack             : 7,//最大显示个数
+        nzPauseOnHover         : false,
+        nzAnimate              : true
+      }
+    },
+  ]
 })
 export class AppModule { }

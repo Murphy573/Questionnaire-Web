@@ -1,0 +1,28 @@
+
+
+$normal-color: #19c5e9 !default;//!default---用户自定义的重复变量将会覆盖此值
+$hover-color: #E9252F;
+
+
+@function my-container($n) {
+  @return $n * 3 ;
+}
+
+@mixin my-border($color, $width, $style: solid) {
+  border: {
+    color: $color;
+    width: my-container($width);
+    style: $style;
+  };
+}
+
+@mixin link-colors($normal, $hover, $visited) {
+  color: $normal;
+  &:hover { color: $hover; }
+  &:visited { color: $visited; }
+}
+
+.full-screen {
+  width: 100%;
+  height: 100%;
+}

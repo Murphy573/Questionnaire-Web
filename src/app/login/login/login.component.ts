@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit {
         data => {
           if(data === 'true'){
             this.lg.setLoginFlag();
-            this.route.navigate(['main']);
+            this.route.navigate(['main/home']);
           }
           else {
             this.errorMsg = data;
