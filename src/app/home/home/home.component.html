@@ -1,3 +1,12 @@
 <p>
   这里是Home页面<a routerLink="/main">跳到Main</a>
 </p>
+
+
+<button nz-button [nzType]="'primary'">点我</button>
+
+<div class="parent">
+  父组件的值:: {{value}}
+  <h3>自定义表单控件</h3>
+  <qn-my-form [(ngModel)]="value"></qn-my-form>
+</div>

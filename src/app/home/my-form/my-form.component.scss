@@ -1,0 +1,36 @@
+
+@mixin border($style, $color, $width: 5px) {
+  style: $style;
+  color: $color;
+  width: $width;
+}
+
+
+section {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+
+  border: {
+    top: {
+      @include border(solid, red, 10px);
+    }
+
+    bottom: {
+      @include border(dashed, #E9E322, 5px);
+    }
+
+    left: {
+      @include border(dotted, #82E9B4, 8px);
+    }
+
+    right: {
+      @include border(solid, #E980D8);
+    }
+  }
+
+  > p {
+    color: #19c5e9;
+  }
+}
